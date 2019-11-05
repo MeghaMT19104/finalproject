@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="10dp"
+    android:paddingRight="15dp"
+    android:paddingLeft="60dp"
+    android:clipToPadding="false"
+    android:layout_gravity="right"
+    android:layout_alignParentRight="true">
+
+    <EditText
+        android:id="@+id/chatname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:paddingBottom="4dp"
+        android:text="Custom Name"
+        android:background="#ffffff"/>
+
+    <EditText
+        android:id="@+id/chattime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chatname"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="2dp"
+        android:paddingBottom="4dp"
+        android:text="12/10 4:26"
+        android:textSize="12sp"
+        android:background="#ffffff" />
+
+    <EditText
+        android:id="@+id/chattext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chattime"
+        android:layout_alignLeft="@+id/chattime"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/my_message"
+        android:elevation="2dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:text="How are you doing? This is a long message that should probably wrap."
+        android:textColor="#fff"
+        android:textSize="18dp" />
+        />
+
+</RelativeLayout>

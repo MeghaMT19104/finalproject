@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.appproject">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.    READ_GSERVICES" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo"
+        android:label="WANNA GO??"
+        android:logo="@color/colorAccent"
+        android:roundIcon="@drawable/logofinal"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".End"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            </intent-filter>
+        </activity>
+        <activity android:name=".locattion" />
+        <activity android:name=".Location" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/NoActionBar" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBRtR2doQntZVh50-z7xjBv3Foe8PN4UII" />
+
+        <activity
+            android:name=".MapsActivity2"
+            android:label="Map" />
+        <!--
+   <meta-data
+         android:name="com.google.android.gms.version"
+            android:value="12451000" />
+        -->
+        <activity
+            android:name=".MapsActivity"
+            android:label="map" />
+        <activity
+            android:name=".MapsActivity"
+            android:label="map"
+            tools:ignore="DuplicateActivity" />
+        <activity
+            android:name=".past_poll_activity"
+            android:label="@string/title_activity_past_poll_activity"
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".Register" />
+        <activity
+            android:name=".editprofile"
+            android:label="@string/title_activity_editprofile"
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".About" />
+        <activity android:name=".SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
