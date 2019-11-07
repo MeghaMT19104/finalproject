@@ -112,7 +112,7 @@ public class editprofile extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
-
+        poll_list.get();
         // LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         firebaseDatabase=FirebaseDatabase.getInstance();
         mDatabase1=firebaseDatabase.getReference("profiles");

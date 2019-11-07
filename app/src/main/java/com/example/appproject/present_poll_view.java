@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.cardview.widget.CardView;
@@ -43,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -75,8 +78,6 @@ public class present_poll_view extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public present_poll_view() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -86,8 +87,8 @@ public class present_poll_view extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         DatabaseReference mDatabase1;
         mDatabase1 = FirebaseDatabase.getInstance().getReference().child("users").child(MainActivity.userId).child("BlockList");
         mDatabase1.addValueEventListener(new ValueEventListener() {
@@ -198,6 +199,7 @@ public class present_poll_view extends Fragment {
         Button add=(Button)view.findViewById(R.id.add_button);
         dest=(EditText)view.findViewById(R.id.des);
         add.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             //changed here
             public void onClick(View view) {
@@ -218,12 +220,14 @@ public class present_poll_view extends Fragment {
                                 DatabaseReference mDatabase;
                                 mDatabase = FirebaseDatabase.getInstance().getReference().child("polls");
                                 mDatabase.child("p" + p.getPid()).setValue(p);
-                                mDatabase.child("p" + p.getPid()).child("requested").child(MainActivity.userId).child("name").setValue(MainActivity.userName);
-                                mDatabase.child("p" + p.getPid()).child("requested").child(MainActivity.userId).child("user").setValue(MainActivity.userId);
+                                mDatabase.child("p" + p.getPid()).child("Added_users").child(MainActivity.userId).child("name").setValue(MainActivity.userName);
+                                mDatabase.child("p" + p.getPid()).child("Added_users").child(MainActivity.userId).child("user").setValue(MainActivity.userId);
                                 poll_list.makeNull();
                                 set_present_poll_list();
+                                //mAdapter.notifyItemInserted(present_poll_list.size()-1);
                                 mAdapter = new PresentPollAdapter(present_poll_list);
                                 recyclerView.setAdapter(mAdapter);
+                                //onCreate(savedInstanceState);
                             } else {
                                 Toast.makeText(getContext(), "You Already have an ACTIVE Poll", Toast.LENGTH_LONG).show();
                             }
@@ -235,7 +239,9 @@ public class present_poll_view extends Fragment {
                     }
 
                 }
+
             }
+
         });
         filter=(Button)view.findViewById(R.id.filter_button);
         filter.setOnClickListener(new View.OnClickListener() {
@@ -332,13 +338,13 @@ public class present_poll_view extends Fragment {
                 //poll_list.get().getPolls().clear();
                 // MainActivity.con=poll_list.get().getPolls().size();
                 mDatabase.child("p"+p.getPid()).setValue(p);
-                mDatabase.child("p"+p.getPid()).child("requested").child(MainActivity.userId).child("name").setValue(MainActivity.userName);
-                mDatabase.child("p"+p.getPid()).child("requested").child(MainActivity.userId).child("user").setValue(MainActivity.userId);
+                mDatabase.child("p"+p.getPid()).child("Added_users").child(MainActivity.userId).child("name").setValue(MainActivity.userName);
+                mDatabase.child("p"+p.getPid()).child("Added_users").child(MainActivity.userId).child("user").setValue(MainActivity.userId);
                 poll_list.makeNull();
                 set_present_poll_list();
                 mAdapter=new PresentPollAdapter(present_poll_list);
                 recyclerView.setAdapter(mAdapter);
-
+                //mAdapter.notifyDataSetChanged();
                 //MainActivity.con=poll_list.get().getPolls().size();
                 //System.out.println(MainActivity.con);
 

@@ -102,8 +102,8 @@ public class PresentPollAdapter extends RecyclerView.Adapter<PresentPollAdapter.
                             Polls p = dataSnapshot1.getValue(Polls.class);
                             if (p.getPid()==mValues.get(position).getPid()) {
                                 //changed here
-                                mDatabase.child("p" + p.getPid()).child("Added_users").child(MainActivity.userId).child("user").setValue(MainActivity.userId);
-                                mDatabase.child("p" + p.getPid()).child("Added_users").child(MainActivity.userId).child("name").setValue(MainActivity.userName);
+                                mDatabase.child("p" + p.getPid()).child("requested").child(MainActivity.userId).child("user").setValue(MainActivity.userId);
+                                mDatabase.child("p" + p.getPid()).child("requested").child(MainActivity.userId).child("name").setValue(MainActivity.userName);
                             }
                         }
                     }

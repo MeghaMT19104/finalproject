@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity
             f=new present_poll_view();
             fm.beginTransaction().add(R.id.fragment_container,f).commit();
             frag=0;
+            //onCreate(savedInstanceState);
         }
         past=(Button)findViewById(R.id.past_button);
         present=(Button)findViewById(R.id.present_button);
