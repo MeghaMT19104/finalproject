@@ -227,15 +227,16 @@ public class present_poll_view extends Fragment {
                                 //mAdapter.notifyItemInserted(present_poll_list.size()-1);
                                 mAdapter = new PresentPollAdapter(present_poll_list);
                                 recyclerView.setAdapter(mAdapter);
+                                Toast.makeText(getContext(), "Poll Added Successfully", Toast.LENGTH_SHORT).show();
                                 //onCreate(savedInstanceState);
                             } else {
-                                Toast.makeText(getContext(), "You Already have an ACTIVE Poll", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), "You Already have an ACTIVE Poll", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(getContext(), "Source not Found", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Source not Found", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getContext(), "Destination not Found", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), "Destination not Found", Toast.LENGTH_SHORT).show();
                     }
 
                 }

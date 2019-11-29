@@ -1,25 +1,18 @@
 package com.example.appproject;
 
+
+import android.os.Handler;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.*;
 
@@ -63,8 +56,18 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 if(!flagUser && !currentUId.equals(ds.child("polls").child(currentChat).child("creater_uid").getValue(String.class)))
                 {
-                    Toast.makeText(getApplicationContext(),"You do not have access to this chatroom",Toast.LENGTH_SHORT);
-                    finish();
+                    final AlertDialog alert = new AlertDialog.Builder(ChatActivity.this).create();
+                    alert.setMessage("You don't have access to this chatroom");
+                    alert.show();
+                    final Handler handler = new Handler();
+                    Runnable runnableCode = new Runnable() {
+                        @Override
+                        public void run() {
+                            alert.cancel();
+                            finish();
+                        }
+                    };
+                    handler.postDelayed(runnableCode, 3000);
                 }
             }
 
@@ -78,17 +81,8 @@ public class ChatActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_chat);
 
-
-
         chatView = findViewById(R.id.chats);
         chats = new ArrayList<>();
-
-        newMsg = findViewById(R.id.writeMsg);
-        sendMsg = findViewById(R.id.sendMessage);
-
-        newMsg = findViewById(R.id.writeMsg);
-        sendMsg = findViewById(R.id.sendMessage);
-
 
         dbref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -110,6 +104,8 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        newMsg = findViewById(R.id.writeMsg);
+        sendMsg = findViewById(R.id.sendMessage);
 
         adapter = new ChatAdapter(this, chats, currentUId);
         chatView.setAdapter(adapter);
@@ -121,16 +117,46 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                dbref.child("chatrooms").child(currentChat).child(new Date().toString()+currentUId)
+                        .setValue(new Message(currentUName, newMsg.getText().toString(),currentUId, true));
                 chats.add(new Message(currentUName, newMsg.getText().toString(),currentUId, true));
                 adapter.notifyDataSetChanged();
                 chatView.scrollToPosition(chatView.getAdapter().getItemCount()-1);
-                dbref.child("chatrooms").child(currentChat).child(currentUId+ new Date().toString())
-                        .setValue(new Message(currentUName, newMsg.getText().toString(),currentUId, true));
-
 
                 newMsg.setText("");
             }
         });
+
+
+        final Handler handler = new Handler();
+        Runnable runnableCode = new Runnable() {
+            @Override
+            public void run() {
+                // Do something here on the main thread
+                Log.d("Database", "Refreshing chat data");
+                dbref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot ds) {
+                        DataSnapshot ds1 = ds.child("chatrooms");
+                        chats.clear();
+                        for(DataSnapshot dsc: ds1.child(currentChat).getChildren())
+                        {
+                            chats.add((Message)dsc.getValue(Message.class));
+                        }
+
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("Database",databaseError.getMessage());
+                    }
+                });
+                handler.postDelayed(this, 1000);
+            }
+        };
+
+        handler.post(runnableCode);
 
     }
 }

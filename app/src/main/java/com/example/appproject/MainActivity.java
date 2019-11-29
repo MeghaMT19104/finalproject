@@ -1,5 +1,6 @@
 package com.example.appproject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,6 +13,11 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 
 import android.view.MenuItem;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +37,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity
     public static String gender="Male";
     public static String session="BTECH-First Year";
     public static int age=40;
+    final Context context = this;
+    GoogleApiClient mGoogleApiClient;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,24 +186,48 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-            Intent intent = new Intent(this, past_poll_activity.class);
-            startActivity(intent);
+        switch (id) {
+            case R.id.nav_edit:
+                Intent i = new Intent(this, editprofile.class);
+                startActivity(i);
+                return true;
 
-        } else if (id == R.id.nav_slideshow) {
+            case R.id.nav_about:
+                Intent i1 = new Intent(this, about1.class);
+                startActivity(i1);
+                return true;
 
-        } else if (id == R.id.nav_tools) {
+            case R.id.nav_logout:
+                if(GoogleSignIn.getLastSignedInAccount(context) != null) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+                            new ResultCallback<Status>() {
+                                @Override
+                                public void onResult(Status status) {
+                                    // ...
+                                    Toast.makeText(getApplicationContext(), "Logged Out google", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                                    startActivity(i);
+                                }
+                            });
+                }
+                else
+                {
+                    Intent i2 = new Intent(this, LoginActivity.class);
+                    startActivity(i2);
+                }
+                return true;
+            case R.id.nav_request:
+                Intent i3=new Intent(this,MainActivity.class);
+                startActivity(i3);
+                return true;
+         /*   case R.id.nav_past:
+                Intent i4=new Intent(this,past_poll_activity.class);
+                startActivity(i4);
+                return true;
+                */
+            default:
+                return true;
         }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 }

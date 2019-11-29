@@ -9,23 +9,32 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.    READ_GSERVICES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/logofinal"
         android:label="WANNA GO??"
         android:logo="@color/colorAccent"
         android:roundIcon="@drawable/logofinal"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ChatActivity"></activity>
-        <activity android:name=".End"></activity>
+        <activity
+            android:name=".locattion3"
+            android:label="@string/title_activity_locattion3"
+            android:theme="@style/NoActionBar"></activity>
+        <activity
+            android:name=".about1"
+            android:label="@string/title_activity_about1"
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".End" />
         <activity
             android:name=".LoginActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             </intent-filter>
         </activity>
         <activity android:name=".locattion" />

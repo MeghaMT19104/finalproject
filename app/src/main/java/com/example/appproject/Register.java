@@ -18,7 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-//hello ji kese ho??
+
 public class Register extends AppCompatActivity implements View.OnClickListener {
     EditText editUsername, editPassword_Register, editConfirmpassword, editEmail_Register;
     static Pattern pat = Pattern.compile("^[0-9a-zA-Z\\s]*.@iiitd.ac.in$");

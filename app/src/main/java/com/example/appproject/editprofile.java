@@ -73,6 +73,79 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.util.HashMap;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
+import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+
+import android.view.MenuItem;
+
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.view.Menu;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
+import java.util.HashMap;
+
 public class editprofile extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -112,7 +185,7 @@ public class editprofile extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
-        poll_list.get();
+
         // LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         firebaseDatabase=FirebaseDatabase.getInstance();
         mDatabase1=firebaseDatabase.getReference("profiles");
@@ -125,6 +198,8 @@ public class editprofile extends AppCompatActivity
         // DatabaseReference da = FirebaseDatabase.getInstance().getReference("profiles");
         Editpic=(ImageView)findViewById(R.id.Edit_pic);
         Desc = (EditText) findViewById(R.id.descriptionedit);
+
+
         age = (EditText) findViewById(R.id.ageedit);
         name = (EditText) findViewById(R.id.yournameedit);
         Desc1 = (TextView) findViewById(R.id.descriptiontext);
@@ -137,7 +212,50 @@ public class editprofile extends AppCompatActivity
         cameraPermission=new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission=new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         rating=(TextView)findViewById(R.id.rating);
-        //Query query=mDatabase.orderByChild("email").equalTo(user.getEmail());
+        String[] status = new String[]{
+                "Student",
+                "Faculty"
+        };
+        String[] session = new String[]{
+                "BTECH-First Year",
+                "BTECH-Second Year",
+                "BTECH-Third Year",
+                "BTECH-Fourth Year",
+                "MTECH-First Year",
+                "MTECH-Second Year",
+                "N/A"
+        };
+        String[] gender = new String[]{
+                "Male",
+                "Female",
+                "Others"
+        };
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
+        sp1 = findViewById(R.id.statusspinner);
+        ArrayAdapter<String> spinnerA = new ArrayAdapter<String>(this, R.layout.spinner1, status);
+        spinnerA.setDropDownViewResource(R.layout.spinner1);
+        sp1.setAdapter(spinnerA);
+        sp2 = findViewById(R.id.sesionspinner);
+
+        ArrayAdapter<String> spinnerB = new ArrayAdapter<String>(this, R.layout.spinner1, session);
+        spinnerB.setDropDownViewResource(R.layout.spinner1);
+        sp2.setAdapter(spinnerB);
+        sp3 = findViewById(R.id.genderspinner);
+
+        ArrayAdapter<String> spinnerC = new ArrayAdapter<String>(this, R.layout.spinner1, gender);
+        spinnerC.setDropDownViewResource(R.layout.spinner1);
+        sp3.setAdapter(spinnerC);
+
+
         mDatabase1.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
@@ -150,9 +268,11 @@ public class editprofile extends AppCompatActivity
                 String session=""+ds.child(user.getUid()).child("Session").getValue();
                 String status=""+ds.child(user.getUid()).child("Status").getValue();
                 String gender=""+ds.child(user.getUid()).child("Gender").getValue();
+                System.out.println(ds.child(user.getUid()).child("ImageUri").getValue());
                 String Image=""+ds.child(user.getUid()).child("ImageUri").getValue();
                 String Age=""+ds.child(user.getUid()).child("Age").getValue();
                 String rate="";
+                String i_check = ""+null;
                 try {
                     rate=ds.child(user.getUid()).child("Ratings").getValue().toString();
                 }
@@ -161,28 +281,70 @@ public class editprofile extends AppCompatActivity
                 }
                 System.out.println("AMEE IN" +Name);
 
-                Desc.setText(desc);
 
-                age.setText(Age);
-                name.setText(Name);
-                Desc1.setText(desc);
-                age1.setText(Age);
-                name1.setText(Name);
-                status1.setText(status);
-                session1.setText(session);
-                gender1.setText(gender);
+                if(desc.equals(i_check))
+                {
+                }
+                else
+                {
+                    Desc1.setText(desc);
+                    Desc.setText(desc);
+                }
+
+                if(Name.equals(i_check))
+                {}
+                else {
+                    name1.setText(Name);
+                    name.setText(Name);
+
+                }
+
+
+                if(Age.equals(i_check))
+                {}
+                else {
+
+                    age.setText(Age);
+                    age1.setText(Age);
+                }
+                if(status.equals(i_check))
+                {}
+                else {
+                    status1.setText(status);
+                    sp1.setSelection(status.indexOf(status));
+                }
+                if(gender.equals(i_check))
+                {
+                }
+                else
+                {
+                    gender1.setText(gender);
+                    sp3.setSelection(gender.indexOf(gender));
+                }
+                if(session.equals(i_check))
+                {
+                }
+                else
+                {
+                    session1.setText(session);
+                    sp2.setSelection(session.indexOf(session));
+                }
+
+
                 Storethisuri = Image;
                 rating.setText(rate);
+                // findViewById(R.id.sesionspinner).setSeletion(2);
 
 
-                try
-                { //if image is there
-                    Picasso.get().load(Image).into(Editpic);
+                if(Image.equals(i_check))
+                {//if image is there
+                    Picasso.get().load(R.drawable.abc).into(Editpic);
+
                     // System.out.println("your image is stored here" +Uri);
                 }
-                catch(Exception e)
+                else
                 { //if not there set an defalut image
-                    Picasso.get().load(R.drawable.abc).into(Editpic);
+                    Picasso.get().load(Image).into(Editpic);
                 }
 
             }
@@ -193,77 +355,8 @@ public class editprofile extends AppCompatActivity
 
             }
         }) ;
-      /*  data1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int j = 0;
-                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
-
-                    String k = locationSnapshot.getKey();
-                    if (!k.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                        options[j] = k;
-                        j++;
-                    }
 
 
-                    String[] op = new String[j];
-                    for (int i = 0; i < j; i++) {
-                        op[i] = options[i];
-                    }
-                //    sp = findViewById(R.id.blockspinner);
-
-                   // ArrayAdapter<String> spinnerD = new ArrayAdapter<String>(context, R.layout.spinner1, op);
-                   // spinnerD.setDropDownViewResource(R.layout.spinner1);
-                  //  sp.setAdapter(spinnerD);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-*/
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView.setNavigationItemSelectedListener(this);
-        sp1 = findViewById(R.id.statusspinner);
-        String[] status = new String[]{
-                "Student",
-                "Faculty"
-        };
-        ArrayAdapter<String> spinnerA = new ArrayAdapter<String>(this, R.layout.spinner1, status);
-        spinnerA.setDropDownViewResource(R.layout.spinner1);
-        sp1.setAdapter(spinnerA);
-        sp2 = findViewById(R.id.sesionspinner);
-        String[] session = new String[]{
-                "BTECH-First Year",
-                "BTECH-Second Year",
-                "BTECH-Third Year",
-                "BTECH-Fourth Year",
-                "MTECH-First Year",
-                "MTECH-Second Year",
-                "N/A"
-        };
-        ArrayAdapter<String> spinnerB = new ArrayAdapter<String>(this, R.layout.spinner1, session);
-        spinnerB.setDropDownViewResource(R.layout.spinner1);
-        sp2.setAdapter(spinnerB);
-        sp3 = findViewById(R.id.genderspinner);
-        String[] gender = new String[]{
-                "Male",
-                "Female",
-                "Others"
-        };
-        ArrayAdapter<String> spinnerC = new ArrayAdapter<String>(this, R.layout.spinner1, gender);
-        spinnerC.setDropDownViewResource(R.layout.spinner1);
-        sp3.setAdapter(spinnerC);
         // sp = findViewById(R.id.blockspinner);
 
         //   ArrayAdapter<String> spinnerD = new ArrayAdapter<String>(this, R.layout.spinner1, options);
@@ -534,7 +627,7 @@ public class editprofile extends AppCompatActivity
                 return true;
 
             case R.id.nav_about:
-                Intent i1 = new Intent(this, About.class);
+                Intent i1 = new Intent(this, about1.class);
                 startActivity(i1);
                 return true;
 
@@ -547,7 +640,7 @@ public class editprofile extends AppCompatActivity
                                 public void onResult(Status status) {
                                     // ...
                                     Toast.makeText(getApplicationContext(), "Logged Out google", Toast.LENGTH_SHORT).show();
-                                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                                    Intent i = new Intent(editprofile.this, LoginActivity.class);
                                     startActivity(i);
                                 }
                             });
@@ -661,7 +754,7 @@ public class editprofile extends AppCompatActivity
                         if (task.isSuccessful()) {
                             finish();
 
-                            Toast.makeText(editprofile.this, "Daata saved", Toast.LENGTH_LONG).show();
+                            Toast.makeText(editprofile.this, "Data saved", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(editprofile.this, editprofile
                                     .class));
                         } else {

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">appproject</string>
-    <string name="title_activity_editprofile">editprofile</string>
+    <string name="title_activity_editprofile">Edit Profile</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Wanna Go?</string>
@@ -14,7 +14,7 @@
     <string name="menu_tools">About Us</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Logout</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Request Poll</string>
     <string name="past_button">PAST</string>
     <string name="present_button">PRESENT</string>
 
@@ -41,4 +41,6 @@
     <string name="past_polls">Past Polls</string>
     <string name="request_1">REQUEST</string>
     <string name="chat">CHAT</string>
+    <string name="title_activity_about1">About Us</string>
+    <string name="title_activity_locattion3">locattion3</string>
 </resources>

@@ -35,7 +35,10 @@ public class End extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        final DatabaseReference data2 = mDatabase.child("polls");
+        Bundle b = getIntent().getExtras();
+       poll = "p"+b.getString("poll");
+       System.out.println("poll id is : "+poll);
+        final DatabaseReference data2 = mDatabase.child("polls").child(poll);
         data2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -44,34 +47,40 @@ public class End extends AppCompatActivity {
                 System.out.println("Function is called");
                 poll_data = dataSnapshot;
                 for (DataSnapshot da : dataSnapshot.getChildren()){
-                    for( DataSnapshot da2 :da.child("Added_users").getChildren()){
-                        if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(da2.getKey())){
-
-                            String p =da.child("status").getValue().toString();
-                            System.out.println("Status is : "+p);
-                            if (p.equals("active")){
-                                poll = da.getKey();
-                                break;
-                            }
-
+                    System.out.println("snapshot : "+da.getKey());
+                    if(da.getKey().equals("status")){
+                        if(da.getValue().toString().equals("active")){
+                            flag = 1;
+                            System.out.println("Status is active for poll");
                         }
                     }
+                    if(da.getKey().equals("Added_users")){
+                        for(DataSnapshot da2 : da.getChildren()){
+                            if(da2.getKey().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                                flag =1;
+                                System.out.println("user found for poll : ");
+                            }
+                        }
+                    }
+
+
+
                 }
-                System.out.println("poll name : "+poll);
-                for (DataSnapshot da : poll_data.getChildren()){
-                    System.out.println("poll id : "+da.getKey());
-                    if (poll!=null && poll.equals(da.getKey())){
-
-                        int i =0;
-                        for( DataSnapshot da2 :da.child("Added_users").getChildren()){
-                            if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(da2.getKey())){
-                                user[i] = da2.child("name").getValue().toString();
-                                uids[i] = da2.getKey();
-                                System.out.println("found");
-                                i++;
-                            }
+                if(flag == 0){
+                    Intent inte = new Intent(context,MainActivity.class);
+                    startActivity(inte);
+                }
+                else{
+                    int i =0;
+                    for (DataSnapshot da2 :dataSnapshot.child("Added_users").getChildren()){
+                        if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(da2.child("user").getValue().toString())){
+                            user[i] = da2.child("user").getValue().toString();
+                            uids[i] = da2.getKey();
+                            System.out.println("found");
+                            i++;
                         }
-                    }
+
+                   }
                 }
                 TextView t;
                 if(user[0] != null){
@@ -92,11 +101,7 @@ public class End extends AppCompatActivity {
                     findViewById(R.id.l3).setVisibility(View.VISIBLE);
                     findViewById(R.id.l33).setVisibility(View.VISIBLE);
                 }
-                if (user[1] == null && user[0] ==null && user[2]==null){
-                    Toast.makeText(context,"You cannot end this journey",Toast.LENGTH_LONG).show();
-                    Intent inte = new Intent(context,MainActivity.class);
-                    startActivity(inte);
-                }
+
 
             }
 
@@ -175,6 +180,7 @@ public class End extends AppCompatActivity {
                 if(dataSnapshot.child("RateCount").getValue() == null){
                     FirebaseDatabase.getInstance().getReference("profiles").child(u).child("RateCount").setValue(1);
                     FirebaseDatabase.getInstance().getReference("profiles").child(u).child("Ratings").setValue(r);
+                    Toast.makeText(context,"Rated Successfully!!",Toast.LENGTH_SHORT).show();
                     rem(data2,vl);
                 }
                 else{
@@ -185,6 +191,7 @@ public class End extends AppCompatActivity {
                     rt = rt/(rc+1);
                     FirebaseDatabase.getInstance().getReference("profiles").child(u).child("RateCount").setValue(rc+1);
                     FirebaseDatabase.getInstance().getReference("profiles").child(u).child("Ratings").setValue(rt);
+                    Toast.makeText(context,"Rated Successfully!!",Toast.LENGTH_SHORT).show();
                     rem(data2,vl);
                 }
             }
@@ -214,6 +221,7 @@ public class End extends AppCompatActivity {
                     kl[0] = "User" + 1;
                     FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("BlockCount").setValue(1);
                     FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("BlockList").child(kl[0]).setValue(u);
+                    Toast.makeText(context,"Blocked Successfully!!",Toast.LENGTH_SHORT).show();
                     rem(data1, vl);
                     return;
 
@@ -250,6 +258,7 @@ public class End extends AppCompatActivity {
                                 FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("BlockCount").setValue(h);
 
                                 FirebaseDatabase.getInstance().getReference("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("BlockList").child(kl[0]).setValue(u);
+                                Toast.makeText(context,"Blocked Successfully!!",Toast.LENGTH_SHORT).show();
                                 rem(data1, vl);
                                 return;
                             }

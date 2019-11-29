@@ -11,5 +11,5 @@ class Userdetails {
     public Userdetails(String username, String email) {
         Username = username;
         this.email = email;
-    }
-}
+    }}
+

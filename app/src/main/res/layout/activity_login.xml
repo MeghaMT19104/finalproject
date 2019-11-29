@@ -1,20 +1,21 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/black"
+    android:background="@drawable/b2"
     android:padding="20dp" >
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="LOGIN"
-        android:textColor="@color/white_greyish"
+        android:textColor="@color/black"
         android:textSize="25sp"
         android:textStyle="bold" />
     <ImageView
@@ -46,14 +47,14 @@
             android:hint="Enter Emailid"
             android:inputType="textEmailAddress"
             android:padding="10dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="16sp" />
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1px"
-            android:background="@android:color/white" />
+            android:background="@android:color/black" />
 
         <EditText
             android:id="@+id/login_password"
@@ -65,8 +66,8 @@
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:inputType="textPassword"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:padding="10dp"
             android:textSize="16sp" />
 
@@ -86,7 +87,7 @@
                 android:layout_weight="2"
                 android:gravity="center"
                 android:padding="5dp"
-                android:textColor="@color/yellow"
+                android:textColor="@color/colorAccent"
                 android:autoLink="all"
                 android:clickable="true"
                 android:text="forgot Password?"
@@ -101,7 +102,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:id="@+id/sign_in_button"/>
+                android:id="@+id/sign_in_button"
+                />
 
         </LinearLayout>
 
@@ -110,11 +112,12 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:background="@drawable/buttonselection"
+            android:background="@color/transparent"
             android:padding="3dp"
             android:text="login"
+
             android:onClick="login"
-            android:textColor="#009688"
+            android:textColor="@color/black"
             android:textSize="17sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -127,7 +130,7 @@
         android:layout_marginTop="15dp"
         android:gravity="center"
         android:padding="5dp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:text="New User?Register here!"
         android:textSize="15sp"
         android:background="@color/transparent"

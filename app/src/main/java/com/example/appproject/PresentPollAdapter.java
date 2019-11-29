@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 //import com.example.wannago.present_poll_view.OnListFragmentInteractionListener;
 //import com.example.wannago.dummy.DummyContent.DummyItem;
@@ -67,8 +68,9 @@ public class PresentPollAdapter extends RecyclerView.Adapter<PresentPollAdapter.
         holder.ej.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+               String p = mValues.get(position).getPid();
                 Intent i=new Intent(view.getContext(),End.class);
+                i.putExtra("poll",p);
 //                i.putExtra("poll_id","p"+mValues.get(position).getPid());
                view.getContext().startActivity(i);
             }
@@ -100,12 +102,15 @@ public class PresentPollAdapter extends RecyclerView.Adapter<PresentPollAdapter.
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for(DataSnapshot dataSnapshot1: dataSnapshot.getChildren()) {
                             Polls p = dataSnapshot1.getValue(Polls.class);
+
                             if (p.getPid()==mValues.get(position).getPid()) {
                                 //changed here
                                 mDatabase.child("p" + p.getPid()).child("requested").child(MainActivity.userId).child("user").setValue(MainActivity.userId);
                                 mDatabase.child("p" + p.getPid()).child("requested").child(MainActivity.userId).child("name").setValue(MainActivity.userName);
                             }
+
                         }
+
                     }
 
                     @Override

@@ -45,8 +45,9 @@ public class poll_list {
                         date1 = sdf.parse(p.getDate());
                         time1 = LocalTime.parse(p.getTime());
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        continue;
+                        //e.printStackTrace();
                     }
                     boolean b=sdf.format(date1).compareTo(sdf.format(date2))==0;
                     boolean t=(sdf2.format(time1).compareTo(sdf2.format(time2))>=0);
