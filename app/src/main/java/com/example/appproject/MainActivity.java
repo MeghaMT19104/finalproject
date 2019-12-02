@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -37,6 +39,7 @@ import androidx.fragment.app.FragmentManager;
 
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
@@ -55,11 +58,17 @@ public class MainActivity extends AppCompatActivity
     public static String gender="Male";
     public static String session="BTECH-First Year";
     public static int age=40;
+    Context c = this;
+    EditText ed;
     final Context context = this;
     GoogleApiClient mGoogleApiClient;
+    EditText e;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ed = findViewById(R.id.search);
+
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user!=null) {
             userId = user.getUid();
